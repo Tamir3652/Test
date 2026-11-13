@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="mn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Хийх зүйлс</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Хийх зүйлс</h1>
+      <div class="input">
+        <input type="text" id="input" placeholder="Шинэ зүйл..." />
+        <button class="button" onclick="addItem()" aria-label="Нэмэх">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </button>
+      </div>
+      <div id="list-container"></div>
+      <div class="footer">
+        <span id="item-count">Таньд 0 хийх зүйл байна</span>
+        <button onclick="clearAll()">Бүгдийг устгах</button>
+      </div>
+    </div>
+
+    <script>
+      const input = document.getElementById("input");
+      const listContainer = document.getElementById("list-container");
+      const itemCount = document.getElementById("item-count");
+      const list = []; // { text, done }
+
+      const addItem = () => {
+        const value = input.value.trim();
+        if (!value) return;
+        list.push({ text: value, done: false });
+        input.value = "";
+        addList();
+      };
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addItem();
+      });
+
+      const addList = () => {
+        listContainer.innerHTML = "";
+        let j = 1;
+
+        for (let i = list.length - 1; i >= 0; i--) {
+          const item = document.createElement("div");
+          item.classList.add("list");
+
+          const div = document.createElement("div");
+          div.classList.add("list-item");
+          item.appendChild(div);
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.classList.add("checkbox");
+          checkbox.checked = list[i].done;
+          div.appendChild(checkbox);
+
+          const text = document.createElement("span");
+          text.innerText = j + ". " + list[i].text;
+          if (list[i].done) text.classList.add("completed");
+          div.appendChild(text);
+
+          checkbox.onchange = () => {
+            list[i].done = checkbox.checked;
+            text.classList.toggle("completed", checkbox.checked);
+          };
+
+          const deleteButton = document.createElement("button");
+          deleteButton.classList.add("delete-button");
+          deleteButton.setAttribute("aria-label", "Устгах");
+          deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
+          deleteButton.onclick = () => {
+            list.splice(i, 1);
+            addList();
+          };
+          item.appendChild(deleteButton);
+
+          listContainer.appendChild(item);
+          j++;
+        }
+
+        // Давталтын гадна: жагсаалт хоосон үед ч шинэчлэгдэнэ
+        itemCount.textContent = "Таньд " + list.length + " хийх зүйл байна";
+      };
+
+      const clearAll = () => {
+        list.length = 0;
+        addList();
+      };
+    </script>
+  </body>
+</html>
