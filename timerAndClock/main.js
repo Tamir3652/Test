@@ -13,7 +13,7 @@ const getClock = () => {
 
   content.textContent = hours + ":" + minutes + ":" + seconds;
 };
-getClock(); // эхний 1 секунд хоосон харагдахгүй
+getClock();
 setInterval(getClock, 1000);
 
 /* ---------- ТАБ СОЛИХ ---------- */
@@ -32,21 +32,26 @@ const showTimer = () => {
 
 /* ---------- TIMER ---------- */
 const timerText = document.getElementById("timerText");
-const progress = document.getElementById("progress");
+const barFill = document.getElementById("barFill");
 const startBtn = document.getElementById("startBtn");
-const C = 2 * Math.PI * 90; // тойргийн урт
 
-let total = 300;
-let left = 300;
-let timerId = null;
-
-const format = (s) =>
-  String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+let total = 300; // нийт секунд
+let left = 300; // үлдсэн секунд
+let timerId = null; // setInterval-ийн дугаар (зогсоохдоо хэрэгтэй)
 
 const render = () => {
-  timerText.textContent = format(left);
-  progress.style.strokeDashoffset = C * (1 - left / total);
-  timer.classList.toggle("danger", left <= 10 && left > 0);
+  let minutes = String(Math.floor(left / 60)).padStart(2, "0");
+  let seconds = String(left % 60).padStart(2, "0");
+  timerText.textContent = minutes + ":" + seconds;
+
+  // Үлдсэн хувиар bar-ын өргөнийг өөрчилнө
+  barFill.style.width = (left / total) * 100 + "%";
+
+  if (left <= 10 && left > 0) {
+    timer.classList.add("danger");
+  } else {
+    timer.classList.remove("danger");
+  }
 };
 
 const pauseTimer = () => {
@@ -64,7 +69,7 @@ const setTimer = (sec) => {
 };
 
 const tick = () => {
-  left--;
+  left = left - 1;
   render();
   if (left <= 0) {
     pauseTimer();
@@ -73,12 +78,19 @@ const tick = () => {
 };
 
 const toggleTimer = () => {
-  if (timerId) return pauseTimer();
-  if (left <= 0) setTimer(total);
-  timerId = setInterval(tick, 1000);
-  startBtn.textContent = "Pause";
+  if (timerId !== null) {
+    pauseTimer();
+  } else {
+    if (left <= 0) {
+      setTimer(total);
+    }
+    timerId = setInterval(tick, 1000);
+    startBtn.textContent = "Pause";
+  }
 };
 
-const resetTimer = () => setTimer(total);
+const resetTimer = () => {
+  setTimer(total);
+};
 
 render();
