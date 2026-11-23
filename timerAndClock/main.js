@@ -34,15 +34,21 @@ const showTimer = () => {
 const timerText = document.getElementById("timerText");
 const barFill = document.getElementById("barFill");
 const startBtn = document.getElementById("startBtn");
+const hourInput = document.getElementById("hourInput");
+const minInput = document.getElementById("minInput");
+const secInput = document.getElementById("secInput");
 
 let total = 300; // нийт секунд
 let left = 300; // үлдсэн секунд
 let timerId = null; // setInterval-ийн дугаар (зогсоохдоо хэрэгтэй)
 
 const render = () => {
-  let minutes = String(Math.floor(left / 60)).padStart(2, "0");
+  // Нийт секундыг цаг, минут, секунд болгон задална
+  // Жишээ: 3725 сек = 1 цаг (3600) + 2 мин (120) + 5 сек
+  let hours = String(Math.floor(left / 3600)).padStart(2, "0");
+  let minutes = String(Math.floor((left % 3600) / 60)).padStart(2, "0");
   let seconds = String(left % 60).padStart(2, "0");
-  timerText.textContent = minutes + ":" + seconds;
+  timerText.textContent = hours + ":" + minutes + ":" + seconds;
 
   // Үлдсэн хувиар bar-ын өргөнийг өөрчилнө
   barFill.style.width = (left / total) * 100 + "%";
@@ -86,6 +92,24 @@ const toggleTimer = () => {
     }
     timerId = setInterval(tick, 1000);
     startBtn.textContent = "Pause";
+  }
+};
+
+// Input-д бичсэн цагийг уншиж timer тохируулна
+const setCustom = () => {
+  let h = Number(hourInput.value); // хоосон бол 0 болно
+  let m = Number(minInput.value);
+  let s = Number(secInput.value);
+
+  if (h < 0 || m < 0 || s < 0 || m > 59 || s > 59) {
+    alert("Минут, секунд 0-59 хооронд байх ёстой");
+  } else if (h + m + s === 0) {
+    alert("Хугацаагаа оруулна уу");
+  } else {
+    setTimer(h * 3600 + m * 60 + s);
+    hourInput.value = "";
+    minInput.value = "";
+    secInput.value = "";
   }
 };
 
