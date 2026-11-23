@@ -160,6 +160,12 @@
     0 0 20px #a855ff;
 }
 
+/* Timer гүйж байхад input, preset-ийг идэвхгүй болгоно */
+.locked {
+  opacity: 0.3;
+  pointer-events: none; /* дарах боломжгүй болно */
+}
+
 /* Сүүлийн 10 секунд: улаан болно */
 .danger #timerText {
   background: linear-gradient(90deg, #ff4d6d, #ffb347);

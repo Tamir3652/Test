@@ -37,6 +37,9 @@ const startBtn = document.getElementById("startBtn");
 const hourInput = document.getElementById("hourInput");
 const minInput = document.getElementById("minInput");
 const secInput = document.getElementById("secInput");
+const inputsBox = document.getElementById("inputsBox");
+const presetsBox = document.getElementById("presetsBox");
+const beep = new Audio("beep.wav"); // дуусахад тоглох дуу
 
 let total = 300; // нийт секунд
 let left = 300; // үлдсэн секунд
@@ -64,6 +67,8 @@ const pauseTimer = () => {
   clearInterval(timerId);
   timerId = null;
   startBtn.textContent = "Start";
+  inputsBox.classList.remove("locked");
+  presetsBox.classList.remove("locked");
 };
 
 const setTimer = (sec) => {
@@ -80,6 +85,7 @@ const tick = () => {
   if (left <= 0) {
     pauseTimer();
     timer.classList.add("done");
+    beep.play();
   }
 };
 
@@ -92,6 +98,8 @@ const toggleTimer = () => {
     }
     timerId = setInterval(tick, 1000);
     startBtn.textContent = "Pause";
+    inputsBox.classList.add("locked");
+    presetsBox.classList.add("locked");
   }
 };
 
@@ -110,6 +118,13 @@ const setCustom = () => {
     hourInput.value = "";
     minInput.value = "";
     secInput.value = "";
+  }
+};
+
+// Input дээр Enter дарвал Set дарсантай адил
+const enterKey = (event) => {
+  if (event.key === "Enter") {
+    setCustom();
   }
 };
 
