@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clock</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="box">
+      <div class="buttons">
+        <button id="clockTab" class="active" onclick="showClock()">Clock</button>
+        <button id="timerTab" onclick="showTimer()">Timer</button>
+      </div>
+
+      <div id="Clock" class="ClockShow">
+        <span id="time"></span>
+      </div>
+
+      <div id="Timer" class="TimerHide">
+        <div class="timerDisplay">
+          <span id="timerText">00:05:00</span>
+        </div>
+
+        <div class="bar">
+          <div id="barFill"></div>
+        </div>
+
+        <div class="inputs" id="inputsBox">
+          <input id="hourInput" type="number" onkeydown="enterKey(event)" min="0" max="99" placeholder="hh" />
+          <span>:</span>
+          <input id="minInput" type="number" onkeydown="enterKey(event)" min="0" max="59" placeholder="mm" />
+          <span>:</span>
+          <input id="secInput" type="number" onkeydown="enterKey(event)" min="0" max="59" placeholder="ss" />
+          <button onclick="setCustom()">Set</button>
+        </div>
+
+        <div class="presets" id="presetsBox">
+          <button onclick="setTimer(60)">1m</button>
+          <button onclick="setTimer(300)">5m</button>
+          <button onclick="setTimer(1500)">25m</button>
+          <button onclick="setTimer(3600)">1h</button>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" onclick="toggleTimer()">Start</button>
+          <button onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
